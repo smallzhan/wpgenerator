@@ -108,22 +108,36 @@ void EditDialog::mouseMoveEvent(QMouseEvent *event)
 
     if (point != oldpoint)
     {
-    if (point.x() >= 0 && point.x() <= col_size_
-        &&  point.y() >= 0 && point.y() <= row_size_)
-    {
-        QCharRef bit = edit_str_[point.y() * col_size_ + point.x()];
-        if (bit == '1')
+        if (point.x() >= 0 && point.x() <= col_size_
+                &&  point.y() >= 0 && point.y() <= row_size_)
         {
-            bit = '0';
+            QCharRef bit = edit_str_[point.y() * col_size_ + point.x()];
+            if (ui->addButton->isChecked())
+            {
+                if (bit == '0')
+                {
+                    bit = '1';
+                }
+            }
+            else if (ui->removeButton->isChecked())
+            {
+                if (bit == '1')
+                {
+                    bit = '0';
+                }
+            }
+            //if (bit == '1')
+            //{
+            //    bit = '0';
+            //}
+            //else if (bit == '0')
+            //{
+            //    bit = '1';
+            //}
+            //edit_str_[point.y() * col_size_ + point.x()] = QChar(bit);
         }
-        else if (bit == '0')
-        {
-            bit = '1';
-        }
-        //edit_str_[point.y() * col_size_ + point.x()] = QChar(bit);
-    }
-    update();
-    oldpoint = point;
+        update();
+        oldpoint = point;
     }
 
 }
@@ -141,19 +155,33 @@ void EditDialog::mouseReleaseEvent(QMouseEvent *event)
         &&  point.y() >= 0 && point.y() <= row_size_)
     {
         QCharRef bit = edit_str_[point.y() * col_size_ + point.x()];
-        if (bit == '1')
+        if (ui->addButton->isChecked())
         {
-            bit = '0';
+            if (bit == '0')
+            {
+                bit = '1';
+            }
         }
-        else if (bit == '0')
+        else if (ui->removeButton->isChecked())
         {
-            bit = '1';
+            if (bit == '1')
+            {
+                bit = '0';
+            }
         }
-        else if (bit >= '2')
-        {
-            QChar cbit = bit.toAscii() - 2;
-            bit = QChar(cbit);
-        }
+//        if (bit == '1')
+//        {
+//            bit = '0';
+//        }
+//        else if (bit == '0')
+//        {
+//            bit = '1';
+//        }
+//        else if (bit >= '2')
+//        {
+//            QChar cbit = bit.toAscii() - 2;
+//            bit = QChar(cbit);
+//        }
     }
     update();
 }

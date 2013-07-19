@@ -46,22 +46,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
     this->resize(this->width(), this->height() - ui->showWidget->height());
 
-//    ui->fontsizeSlider->setMaximum(200);
-//    ui->fontsizeSlider->setValue(100);
-
-//    ui->fontspaceSlider->setMaximum(100);
-//    ui->fontspaceSlider->setMinimum(-100);
-//    ui->fontspaceSlider->setValue(0);
-//    ui->spaceSpinBox->setMaximum(2.0);
-//    ui->spaceSpinBox->setMinimum(0.0);
-//    ui->spaceSpinBox->setValue(1.0);
-
-//    //ui->verticalSlider->hide();
-//    ui->sizeSpinBox->setMinimum(0);
-//    ui->sizeSpinBox->setMaximum(255);
-//    ui->sizeSpinBox->setValue(125);
-
-//    ui->fixedBox->setChecked(true);
 
     fontfamily_ = ui->fontComboBox->currentFont().family();
     size_ = ui->fontsizeSlider->value();
@@ -205,7 +189,7 @@ void MainWindow::on_actionSave_triggered()
     if (!fileName.isEmpty())
     {
 
-        transformImage();
+        //transformImage();
 
         bool encrypt = ui->encryptBox->isChecked();
 
