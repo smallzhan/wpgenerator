@@ -10,6 +10,7 @@
 #include <opencv2/core/core.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/highgui/highgui.hpp>
+#include <cmath>
 
 QImage Mat2QImage(cv::Mat const& src)
 {
@@ -256,8 +257,123 @@ void MainWindow::transformImage()
     }
 
     full_matrix.create(row, col, CV_8U);
+
     cv::cvtColor(orig_img, gray_img, CV_BGR2GRAY);
     cv::threshold(gray_img, gray_img, thres_, 255, CV_THRESH_BINARY);
+
+    printf("gray_img: col = %d, row = %d\n", gray_img.cols, gray_img.rows);
+
+    cv::Mat dot_img(gray_img.size(), CV_8U);
+
+    int cur_row = 0;
+    int segment = 4;
+    int dot_row = 0;
+
+    if (ui->fixedBox->isChecked())
+    {
+        int step = gray_img.rows / segment;
+        for (int i = 0; i < segment; ++i)
+        {
+
+            cv::Rect roi(0, cur_row, gray_img.cols, step);
+            cv::Mat seg_img = gray_img(roi);
+
+            int seg_row = (int) step * 2.0 / (3 * sqrt(i * 1.0) + 2);
+
+            cv::Rect roi_2(0, dot_row, gray_img.cols, seg_row);
+            cv::Mat seg_dot_img = dot_img(roi_2);
+
+            cv::Mat after_img(seg_img.size(), CV_8U);
+            cv::resize(seg_img, after_img, cv::Size(gray_img.cols, seg_row));
+
+            after_img.copyTo(seg_dot_img);
+            cur_row += step;
+            dot_row += after_img.rows;
+        }
+        cv::resize(gray_img, gray_img, cv::Size(gray_img.cols, dot_row));
+        cv::Rect roi(0, 0, gray_img.cols, dot_row);
+        //printf("%d-%d\n", col, dot_row );
+        cv::Mat img = dot_img(roi);
+        img.copyTo(gray_img);
+    }
+
+    size_t top_blank = 0;
+    size_t bot_blank = gray_img.rows;
+    for (size_t j = 0; j < gray_img.rows; ++j)
+    {
+        uchar *pRow = gray_img.ptr<uchar>(j);
+        for (size_t i = 0; i < gray_img.cols; ++i)
+        {
+            if (pRow[i] == 0)
+            {
+                top_blank = j;
+                break;
+            }
+        }
+        if (top_blank != 0)
+            break;
+        //break;
+    }
+    for (size_t j = gray_img.rows; j > 0; --j)
+    {
+        uchar *pRow = gray_img.ptr<uchar>(j);
+        for (size_t i = 0; i < gray_img.cols; ++i)
+        {
+            if (pRow[i] == 0)
+            {
+                bot_blank = gray_img.rows - j;
+                break;
+            }
+        }
+        if (bot_blank != gray_img.rows)
+            break;
+    }
+
+    printf("top_blank = %d, bot_blank = %d, total height = %d\n", top_blank, bot_blank, gray_img.rows);
+
+    cv::Mat recenter;
+    recenter.create(gray_img.size(), CV_8U);
+
+    for (size_t j = 0; j < recenter.rows; ++j)
+    {
+        uchar *pRow = recenter.ptr<uchar>(j);
+        for (size_t i = 0; i < recenter.cols; ++i)
+        {
+            pRow[i] = 255;
+        }
+    }
+
+
+
+    cv::Rect roi(0, (top_blank + bot_blank) / 2, gray_img.cols, gray_img.rows - top_blank - bot_blank);
+    cv::Mat center = recenter(roi);
+
+    cv::Rect roi_gray(0, top_blank, gray_img.cols, gray_img.rows - top_blank - bot_blank);
+    cv::Mat gray_center = gray_img(roi_gray);
+
+    gray_center.copyTo(center);
+
+    recenter.copyTo(gray_img);
+
+// add the xxxx, to adjust the image to be in center of height.
+//    cv::Rect roi;
+//    if (top_blank > bot_blank)
+//    {
+//        roi = cv::Rect(0, top_blank - bot_blank, gray_img.cols, gray_img.rows + bot_blank - top_blank);
+
+//    }
+//    else
+//    {
+//        roi = cv::Rect(0, 0, gray_img.cols, gray_img.rows + top_blank - bot_blank);
+//    }
+
+//    cv::Mat center_img = gray_img(roi);
+//    cv::resize(gray_img, gray_img, center_img.size());
+//    center_img.copyTo(gray_img);
+
+
+
+
     cv::resize(gray_img, full_matrix, cv::Size(col, row));
 
     std::stringstream sstr;
