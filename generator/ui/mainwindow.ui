@@ -35,6 +35,29 @@
       <height>251</height>
      </rect>
     </property>
+    <widget class="QScrollArea" name="scrollArea">
+     <property name="geometry">
+      <rect>
+       <x>50</x>
+       <y>20</y>
+       <width>120</width>
+       <height>80</height>
+      </rect>
+     </property>
+     <property name="widgetResizable">
+      <bool>true</bool>
+     </property>
+     <widget class="QWidget" name="scrollAreaWidgetContents">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>118</width>
+        <height>78</height>
+       </rect>
+      </property>
+     </widget>
+    </widget>
    </widget>
    <widget class="ShowArea" name="showWidget" native="true">
     <property name="enabled">
@@ -359,6 +382,7 @@
    <container>1</container>
    <slots>
     <signal>getFinished()</signal>
+    <signal>getFinished(bool)</signal>
     <slot>getFontSize(int)</slot>
     <slot>setClearImage()</slot>
    </slots>
@@ -368,26 +392,13 @@
    <extends>QWidget</extends>
    <header>showarea.h</header>
    <container>1</container>
+   <slots>
+    <signal>mapOver()</signal>
+   </slots>
   </customwidget>
  </customwidgets>
  <resources/>
  <connections>
-  <connection>
-   <sender>widget</sender>
-   <signal>getFinished()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>updateStatus()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>173</x>
-     <y>75</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>191</x>
-     <y>272</y>
-    </hint>
-   </hints>
-  </connection>
   <connection>
    <sender>fontComboBox</sender>
    <signal>currentFontChanged(QFont)</signal>
@@ -516,6 +527,54 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>showWidget</sender>
+   <signal>mapOver()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>timerDone()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>14</x>
+     <y>485</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>4</x>
+     <y>502</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>fixedBox</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>updateAll()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>430</x>
+     <y>142</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>481</x>
+     <y>141</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>widget</sender>
+   <signal>getFinished(bool)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>updateAll()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>115</x>
+     <y>229</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>153</x>
+     <y>300</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>printInfos()</slot>
@@ -530,5 +589,7 @@
   <slot>getSpaceSize(int)</slot>
   <slot>getFontSize(int)</slot>
   <slot>showPreview(bool)</slot>
+  <slot>timerDone()</slot>
+  <slot>updateAll()</slot>
  </slots>
 </ui>

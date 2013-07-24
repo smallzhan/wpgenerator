@@ -215,15 +215,16 @@ void ImageArea::mouseReleaseEvent(QMouseEvent *event)
         QPixmap pxmap = QPixmap::grabWidget(this, rect);
         ClipDialog clipdialog(pxmap);
         clipdialog.showClipped();
-        type_ = IMAGE_NONE;
+        //type_ = IMAGE_NONE;
 
         if (clipdialog.exec() == QDialog::Accepted)
         {
             pxmap_ = pxmap;
             type_ = SHOW_IMAGE;
             update();
+            //emit imageUpdate();
             //setImage();
-            emit(getFinished());
+            emit(getFinished(true));
         }
     }
 }

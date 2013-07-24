@@ -12,24 +12,23 @@
 #include <opencv2/highgui/highgui.hpp>
 #include <cmath>
 
-QImage Mat2QImage(cv::Mat const& src)
+static QImage Mat2QImage(cv::Mat const& src)
 {
      cv::Mat temp; // make the same cv::Mat
-     cvtColor(src, temp,CV_BGR2RGB); // cvtColor Makes a copt, that what i need
+     cvtColor(src, temp, CV_BGR2RGB);
      QImage dest((uchar*) temp.data, temp.cols, temp.rows, temp.step, QImage::Format_RGB888);
      QImage dest2(dest);
      dest2.detach(); // enforce deep copy
      return dest2;
 }
 
-cv::Mat QImage2Mat(QImage const& src)
+static cv::Mat QImage2Mat(QImage const& src)
 {
      cv::Mat tmp(src.height(), src.width(), CV_8UC3, (uchar*)src.bits(), src.bytesPerLine());
-     cv::Mat result(tmp); // deep copy just in case (my lack of knowledge with open cv)
+     cv::Mat result(tmp); // deep copy just in case
      cvtColor(tmp, result, CV_BGR2RGB);
      return result;
 }
-
 
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -37,65 +36,91 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow),
     size_(0),
     text_("hello"),
-    thres_(0),
-    update_(false)
+    thres_(0)
 {
     ui->setupUi(this);
 
+    ui->showWidget->stopWaterDrop();
     ui->showWidget->setVisible(false);
     ui->showWidget->hide();
 
     this->resize(this->width(), this->height() - ui->showWidget->height());
 
-
     fontfamily_ = ui->fontComboBox->currentFont().family();
     size_ = ui->fontsizeSlider->value();
     thres_ = ui->sizeSpinBox->value();
 
-    timer = new QTimer(this);
-    connect(timer, SIGNAL(timeout()), this, SLOT(timerDone()));
-    timer->start(20);
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
-    delete timer;
 }
 
 void MainWindow::fontChanged()
 {
     QFont font = ui->fontComboBox->currentFont();
     fontfamily_ = font.family();
-    //qreal spacing = font.letterSpacing();
+
     int spacing = ui->fontspaceSlider->value();
-    //ui->fontspaceSlider->setValue(spacing);
     font.setLetterSpacing(QFont::PercentageSpacing, spacing + 100);
     ui->spaceSpinBox->setValue((double)(spacing + 100) / 100.0);
-    //font.
     ui->widget->setFont(font);
-    updateStatus();
+    updateAll();
+    //update_ = true;
+    //updateStatus(true);
 }
 
 void MainWindow::textChanged()
 {
     text_ = ui->lineEdit->text();
     ui->widget->setText(text_);
-    updateStatus();
+    updateAll();
 }
 
 void MainWindow::updateStatus()
 {
-
-    update_ = true;
     ui->statusBar->clearMessage();
-    ui->statusBar->showMessage(fontfamily_ + " (" + QString::number(size_) + "): " + text_);
+    ImageArea::ImageType imagetype = ui->widget->getShowType();
+
+    switch (imagetype)
+    {
+    case ImageArea::LOAD_IMAGE:
+        ui->statusBar->showMessage("Load Image: " + fname_ );
+        break;
+    case ImageArea::SHOW_IMAGE:
+        ui->statusBar->showMessage("Show Image: " + fname_);
+        break;
+    case ImageArea::DRAW_TEXT:
+    case ImageArea::SHOW_TEXT:
+        ui->statusBar->showMessage("Show Text: " + text_ + " in " + fontfamily_ + " with size " + QString::number(size_));
+        break;
+    case ImageArea::CLIP_IMAGE:
+        ui->statusBar->showMessage("Clip Image!!!");
+        break;
+    case ImageArea::CLEAR_IMAGE:
+        ui->statusBar->showMessage("Clear Image.");
+        break;
+    default:
+        ui->statusBar->showMessage("Do Noting, Waiting for texts or images");
+        break;
+    }
+
+}
+
+void MainWindow::updatePreview()
+{
 
     if (ui->showButton->isChecked())
     {
-        if (!timer->isActive())
+        if (ui->reverseBox->isChecked())
         {
-            timer->start(20);
+
+            ui->showWidget->setWaterDrop(reverse_bitmap_);
+        }
+        else
+        {
+            ui->showWidget->setWaterDrop(out_bitmap_);
         }
     }
 }
@@ -105,50 +130,39 @@ void MainWindow::getFontSize(int sz)
     size_ = sz;
     ui->sizeSpinBox->setValue(int(sz * 255 / 200));
     ui->widget->setFontSize(sz);
-    updateStatus();
+    updateAll();
 }
 
 void MainWindow::getSpaceSize(int sz)
 {
-    //space_size_ = sz;
     ui->spaceSpinBox->setValue(double(sz + 100.0)/ 100.0);
     ui->widget->setSpaceSize(sz + 100);
-    updateStatus();
+    updateAll();
 }
 
 void MainWindow::getThres(int thres)
 {
     thres_ = thres;
-    updateStatus();
+    updateAll();
 }
 
 void MainWindow::clearImage()
 {
     ui->widget->setShowType(ImageArea::CLEAR_IMAGE);
     ui->widget->setImage("");
-    timer->stop();
+    ui->showWidget->stopWaterDrop();
 }
 
 void MainWindow::timerDone()
 {
-    bool checked = ui->showButton->isChecked();
-    if (checked)
-    {
-        if (update_)
-        {
-            transformImage();
-            update_ = false;
-        }
-        bool reverse = ui->reverseBox->isChecked();
-        if (reverse)
-        {
-            ui->showWidget->setWaterDrop(reverse_bitmap_);
-        }
-        else
-        {
-            ui->showWidget->setWaterDrop(out_bitmap_);
-        }
-    }
+    QTimer::singleShot(50, this, SLOT(updatePreview()));
+}
+
+void MainWindow::updateAll()
+{
+    transformImage();
+    updateStatus();
+    updatePreview();
 }
 
 void MainWindow::on_actionOpen_triggered()
@@ -166,8 +180,7 @@ void MainWindow::on_actionOpen_triggered()
         fname_ = fileName;
         ui->widget->setShowType(ImageArea::LOAD_IMAGE);
         ui->widget->setImage(fileName);
-        update_ = true;
-        //transformImage();
+        updateAll();
     }
 
 }
@@ -189,9 +202,6 @@ void MainWindow::on_actionSave_triggered()
                                 options);
     if (!fileName.isEmpty())
     {
-
-        //transformImage();
-
         bool encrypt = ui->encryptBox->isChecked();
 
         WaterPrinter::WPEncoder encoder;
@@ -227,14 +237,16 @@ void MainWindow::showPreview(bool preview)
 {
     if (preview)
     {
-        update_ = true;
+        //update_ = true;
         this->resize(this->width(), this->height() + ui->showWidget->height());
         ui->showWidget->setVisible(true);
+        updateAll();
     }
     else
     {
         ui->showWidget->setVisible(false);
         this->resize(this->width(), this->height() - ui->showWidget->height());
+        ui->showWidget->stopWaterDrop();
     }
 }
 
@@ -299,6 +311,7 @@ void MainWindow::transformImage()
 
     size_t top_blank = 0;
     size_t bot_blank = gray_img.rows;
+
     for (size_t j = 0; j < gray_img.rows; ++j)
     {
         uchar *pRow = gray_img.ptr<uchar>(j);
@@ -355,24 +368,6 @@ void MainWindow::transformImage()
 
     recenter.copyTo(gray_img);
 
-// add the xxxx, to adjust the image to be in center of height.
-//    cv::Rect roi;
-//    if (top_blank > bot_blank)
-//    {
-//        roi = cv::Rect(0, top_blank - bot_blank, gray_img.cols, gray_img.rows + bot_blank - top_blank);
-
-//    }
-//    else
-//    {
-//        roi = cv::Rect(0, 0, gray_img.cols, gray_img.rows + top_blank - bot_blank);
-//    }
-
-//    cv::Mat center_img = gray_img(roi);
-//    cv::resize(gray_img, gray_img, center_img.size());
-//    center_img.copyTo(gray_img);
-
-
-
 
     cv::resize(gray_img, full_matrix, cv::Size(col, row));
 
@@ -397,6 +392,7 @@ void MainWindow::transformImage()
 void MainWindow::on_actionEditMatrix_triggered()
 {
     //transformImage();
+    ui->showWidget->stopWaterDrop();
     if (!out_bitmap_.isEmpty())
     {
         bool reverse = ui->reverseBox->isChecked();
@@ -409,6 +405,7 @@ void MainWindow::on_actionEditMatrix_triggered()
         {
             editdialog = new EditDialog(out_bitmap_);
         }
+
         editdialog->showBitmap();
         if (editdialog->exec() == QDialog::Accepted)
         {
@@ -423,9 +420,10 @@ void MainWindow::on_actionEditMatrix_triggered()
                 reverseBitmap(out_bitmap_, reverse_bitmap_);
             }
         }
+
         delete editdialog;
     }
-
+    updatePreview();
 }
 
 void MainWindow::reverseBitmap(const QString& in, QString& out)

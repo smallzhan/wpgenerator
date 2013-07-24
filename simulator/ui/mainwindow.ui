@@ -6,20 +6,31 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>642</width>
-    <height>542</height>
+    <width>661</width>
+    <height>554</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
-  <widget class="QWidget" name="centralWidget"/>
+  <widget class="QWidget" name="centralWidget">
+   <widget class="ShowArea" name="showWidget" native="true">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>10</y>
+      <width>641</width>
+      <height>481</height>
+     </rect>
+    </property>
+   </widget>
+  </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>642</width>
+     <width>661</width>
      <height>23</height>
     </rect>
    </property>
@@ -77,6 +88,37 @@
   </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
+ <customwidgets>
+  <customwidget>
+   <class>ShowArea</class>
+   <extends>QWidget</extends>
+   <header>showarea.h</header>
+   <container>1</container>
+   <slots>
+    <signal>mapOver()</signal>
+   </slots>
+  </customwidget>
+ </customwidgets>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>showWidget</sender>
+   <signal>mapOver()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>sendNewMap()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>639</x>
+     <y>383</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>652</x>
+     <y>382</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>sendNewMap()</slot>
+ </slots>
 </ui>

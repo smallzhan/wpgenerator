@@ -22,9 +22,8 @@ public:
 private slots:
     void on_actionOpen_triggered();
     void timerDone();
+    void sendNewMap();
     
-protected:
-    void paintEvent(QPaintEvent *);
 
 
 private:
@@ -38,10 +37,8 @@ private:
     QList<QPoint> pointlist_;
     int line_wait_time_;
     int map_wait_time_;
-    int col_;
-    int row_;
 
-    QTimer *p_timer_;
+    int map_seq_;
 };
 
 #endif // MAINWINDOW_H

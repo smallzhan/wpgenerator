@@ -32,7 +32,7 @@ public:
 
 
 signals:
-    void getFinished();
+    void getFinished(bool);
 
 public slots:
     void setFont(const QFont &font_);

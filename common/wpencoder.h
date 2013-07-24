@@ -6,7 +6,7 @@
 #include <cstdio>
 #include "wpdefines.h"
 
-//#define _NO_CRYPT
+#define _NO_CRYPT
 #ifndef _NO_CRYPT
 #include "rsa.h"
 using CryptoPP::RSA;

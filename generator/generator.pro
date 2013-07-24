@@ -15,19 +15,19 @@ TEMPLATE = app
 SOURCES += main.cpp\
     mainwindow.cpp \
     ../common/showarea.cpp \
+    ../common/editdialog.cpp \
     ../common/wpencoder.cpp \
     ../common/wpdefines.cpp \
     imagearea.cpp \
-    clipdialog.cpp \
-    editdialog.cpp
+    clipdialog.cpp
 
 HEADERS  += mainwindow.h \
     ../common/showarea.h \
+    ../common/editdialog.h \
     ../common/wpencoder.h \
     ../common/wpdefines.h \
     imagearea.h \
-    clipdialog.h \
-    editdialog.h
+    clipdialog.h
 
 FORMS    += ui/mainwindow.ui \
     ui/clipdialog.ui \

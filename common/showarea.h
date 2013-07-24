@@ -6,6 +6,8 @@
 #include <QWidget>
 
 //! [0]
+class QTimer;
+
 class ShowArea : public QWidget
 {
     Q_OBJECT
@@ -13,10 +15,19 @@ class ShowArea : public QWidget
 public:
 
     ShowArea(QWidget *parent = 0);
+    ~ShowArea();
 
+    void stopWaterDrop();
+
+signals:
+    void mapOver();
 
 public slots:
     void setWaterDrop(const QString& bitmap);
+
+    void timerDone();
+
+
     //
 
 protected:
@@ -28,5 +39,9 @@ private:
 
     int col_;
     int row_;
+
+    QTimer *p_timer_;
+
+    QString show_strs_;
 };
 #endif // SHOWAREA_H
