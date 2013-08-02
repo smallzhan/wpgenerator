@@ -7,6 +7,8 @@ namespace Ui {
 class EditDialog;
 }
 
+class QScrollArea;
+
 class EditDialog : public QDialog
 {
     Q_OBJECT
@@ -26,6 +28,7 @@ protected:
 
 private:
     Ui::EditDialog *ui;
+
     QString edit_str_;
     QPoint select_point_;
 

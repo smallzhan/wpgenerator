@@ -275,6 +275,30 @@ std::string WPEncoder::getBitmap() const
 	return sstr.str();
 }
 
+void WPEncoder::addFile(const char* fname)
+{
+    std::string first(plain_);
+    size_t base_idx = outfile_.find_first_of(".");
+    std::string new_file;
+    if (base_idx != std::string::npos)
+    {
+        new_file = outfile_.substr(0, base_idx) + "_" + std::string(fname);
+    }
+    else
+    {
+        new_file = outfile_ + "_" + std::string(fname);
+    }
+
+    setOutfile(std::string(fname));
+    decodeBits();
+
+    plain_ = first + plain_;
+
+
+    setOutfile(new_file);
+    encodeBits();
+}
+
 /************************************************
 * test
 *************************************************/
@@ -287,6 +311,7 @@ int main(int argc, char** argv)
 	encoder.setCryptType(atoi(argv[2]));
 	encoder.decodeBits();
 
+    encoder.addFile(argv[3]);
 	std::string out_str = encoder.getBitmap();
 
 	const char* p_bits = out_str.c_str();

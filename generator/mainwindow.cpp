@@ -160,13 +160,16 @@ void MainWindow::timerDone()
 
 void MainWindow::updateAll()
 {
-    transformImage();
     updateStatus();
+    transformImage();
     updatePreview();
 }
 
 void MainWindow::on_actionOpen_triggered()
 {
+//FIXME: the program crashed when load the image initially.
+    //   but it is ok when add some text.
+
     QFileDialog::Options options;
     QString selectedFilter;
     QString fileName = QFileDialog::getOpenFileName(this,
@@ -180,6 +183,7 @@ void MainWindow::on_actionOpen_triggered()
         fname_ = fileName;
         ui->widget->setShowType(ImageArea::LOAD_IMAGE);
         ui->widget->setImage(fileName);
+        //ui->widget->update();
         updateAll();
     }
 
@@ -233,6 +237,48 @@ void MainWindow::on_actionSave_triggered()
     }
 }
 
+void MainWindow::on_actionLoad_triggered()
+{
+    QFileDialog::Options options;
+    QString selectedFilter;
+    QString fileName = QFileDialog::getOpenFileName(this,
+                                tr("Open WaterPrinter Files"),
+                                "",
+                                tr("3D WaterPrinter Files (*.3dwp)"),
+                                &selectedFilter,
+                                options);
+    if (!fileName.isEmpty())
+    {
+        clearImage();
+        bool encrypt = ui->encryptBox->isChecked();
+
+        WaterPrinter::WPEncoder encoder;
+        encoder.setCryptType(encrypt);
+        encoder.setOutfile(fileName.toStdString());
+        encoder.decodeBits();
+
+        std::string bitmap = encoder.getBitmap();
+
+        std::stringstream sstr;
+        sstr.str("");
+
+        for (size_t i = 0; i < bitmap.size(); ++i)
+        {
+            int idx = (bitmap.size() / 8 - i / 8 - 1) * 8 + i % 8;
+            for (size_t j = 0; j < 8; ++j)
+            {
+                if ((bitmap[idx] >> (7-j)) & 0x01)
+                    sstr << '1';
+                else
+                    sstr << '0';
+            }
+        }
+
+        out_bitmap_ = QString::fromStdString(sstr.str());
+        updatePreview();
+    }
+}
+
 void MainWindow::showPreview(bool preview)
 {
     if (preview)
@@ -240,7 +286,7 @@ void MainWindow::showPreview(bool preview)
         //update_ = true;
         this->resize(this->width(), this->height() + ui->showWidget->height());
         ui->showWidget->setVisible(true);
-        updateAll();
+        updatePreview();
     }
     else
     {

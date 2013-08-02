@@ -12,15 +12,18 @@ SOURCES += main.cpp\
     ../common/showarea.cpp \
     ../common/wpencoder.cpp \
     ../common/wpdefines.cpp \
-    ../common/wpmanager.cpp
+    ../common/wpmanager.cpp \
+    simdialog.cpp
 
 HEADERS  += mainwindow.h \
     ../common/showarea.h \
     ../common/wpencoder.h \
     ../common/wpdefines.h \
-    ../common/wpmanager.h
+    ../common/wpmanager.h \
+    simdialog.h
 
-FORMS    += ui/mainwindow.ui
+FORMS    += ui/mainwindow.ui \
+    ui/simdialog.ui
 
 INCLUDEPATH += ../common
 

@@ -41,6 +41,11 @@ void MainWindow::on_actionOpen_triggered()
 
 }
 
+void MainWindow::on_actionEdit_triggered()
+{
+
+}
+
 void MainWindow::loadScript(const QString& conf_file)
 {
     WaterPrinter::WPManager manager(conf_file.toStdString().c_str());

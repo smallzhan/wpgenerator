@@ -5,6 +5,7 @@
 
 #include <QPainter>
 #include <QtGui>
+#include <QScrollArea>
 
 
 EditDialog::EditDialog(const QString& bitmap, QWidget *parent) :

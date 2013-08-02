@@ -41,6 +41,8 @@ namespace WaterPrinter
 
 		std::string getBitmap() const ;
 
+        void addFile(const char* fname);
+
 	private:
 		std::string outfile_;		
 
