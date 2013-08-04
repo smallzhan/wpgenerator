@@ -6,64 +6,60 @@
 #include <QPainter>
 #include <QtGui>
 #include <QScrollArea>
+#include <QHBoxLayout>
 
+static const int g_top_margin = 10;
 
-EditDialog::EditDialog(const QString& bitmap, QWidget *parent) :
-    edit_str_(bitmap),
-    QDialog(parent),
-    ui(new Ui::EditDialog)
+ShowWidget::ShowWidget(QWidget *parent) :
+    QWidget(parent)
 {
-    ui->setupUi(this);
-    ui->widget->setMouseTracking(true);
     col_size_ = WaterPrinter::g_col;
-    row_size_ = bitmap.size() / col_size_;
+    row_size_ = WaterPrinter::g_row;
     dot_size_ = WaterPrinter::g_dot_size;
+
+    edit_state_ = kEDIT_ADD;
 }
 
-EditDialog::~EditDialog()
+
+ShowWidget::~ShowWidget()
 {
-    delete ui;
+
 }
 
-QPoint EditDialog::global2map(const QPoint& gpos) const
+void ShowWidget::setString(const QString &bitmap)
+{
+    edit_str_ = bitmap;
+    row_size_ = bitmap.size() / col_size_;
+}
+
+QPoint ShowWidget::global2map(const QPoint& gpos) const
 {
     return global2map(gpos.x(), gpos.y());
 }
 
-QPoint EditDialog::global2map(int i, int j) const
+QPoint ShowWidget::global2map(int i, int j) const
 {
-    return QPoint((i - begin_.x()) / dot_size_,
-                  (j - begin_.y()) / dot_size_);
+    return QPoint(i / dot_size_,
+                  j / dot_size_);
 }
-QPoint EditDialog::map2global(const QPoint& mpos) const
+QPoint ShowWidget::map2global(const QPoint& mpos) const
 {
     return map2global(mpos.x(), mpos.y());
 }
 
-QPoint EditDialog::map2global(int i, int j) const
+QPoint ShowWidget::map2global(int i, int j) const
 {
-    return QPoint(begin_.x() + dot_size_ / 2 + j * dot_size_,
-                  begin_.y() + dot_size_ / 2 + i * dot_size_);
+    return QPoint(dot_size_ / 2 + j * dot_size_,
+                  dot_size_ / 2 + i * dot_size_);
 }
 
 
-void EditDialog::showBitmap()
+void ShowWidget::showBitmap()
 {
-    ui->widget->resize((col_size_ + 2) * dot_size_, (row_size_ + 2) * dot_size_);
-    this->resize(ui->widget->width() + dot_size_ + ui->buttonBox->width(), ui->widget->height() + 2 * dot_size_);
-    center_ = QPoint(ui->widget->width() / 2,
-                     ui->widget->height() / 2);
-    begin_ = QPoint(center_.x() - dot_size_ * col_size_ / 2,
-                    center_.y() - dot_size_ * row_size_ / 2);
-    update();
+    this->resize((col_size_ + 2) * dot_size_, (row_size_ + 1) * dot_size_);
 }
 
-QString EditDialog::outputString()
-{
-    return edit_str_;
-}
-
-void EditDialog::paintEvent(QPaintEvent *)
+void ShowWidget::paintEvent(QPaintEvent *)
 {
     QPainter painter(this);
     painter.setPen(palette().dark().color());
@@ -96,12 +92,12 @@ void EditDialog::paintEvent(QPaintEvent *)
 
 }
 
-void EditDialog::mousePressEvent(QMouseEvent *event)
+void ShowWidget::mousePressEvent(QMouseEvent *event)
 {
     select_point_ = QPoint(event->x(), event->y());
 }
 
-void EditDialog::mouseMoveEvent(QMouseEvent *event)
+void ShowWidget::mouseMoveEvent(QMouseEvent *event)
 {
 
     static QPoint oldpoint;
@@ -113,37 +109,27 @@ void EditDialog::mouseMoveEvent(QMouseEvent *event)
                 &&  point.y() >= 0 && point.y() <= row_size_)
         {
             QCharRef bit = edit_str_[point.y() * col_size_ + point.x()];
-            if (ui->addButton->isChecked())
+            if (edit_state_ == kEDIT_ADD)
             {
                 if (bit == '0')
                 {
                     bit = '1';
                 }
             }
-            else if (ui->removeButton->isChecked())
+            else if (edit_state_ == kEDIT_REM)
             {
                 if (bit == '1')
                 {
                     bit = '0';
                 }
             }
-            //if (bit == '1')
-            //{
-            //    bit = '0';
-            //}
-            //else if (bit == '0')
-            //{
-            //    bit = '1';
-            //}
-            //edit_str_[point.y() * col_size_ + point.x()] = QChar(bit);
         }
         update();
         oldpoint = point;
     }
-
 }
 
-void EditDialog::mouseReleaseEvent(QMouseEvent *event)
+void ShowWidget::mouseReleaseEvent(QMouseEvent *event)
 {
 
     if (event->pos() != select_point_)
@@ -156,33 +142,89 @@ void EditDialog::mouseReleaseEvent(QMouseEvent *event)
         &&  point.y() >= 0 && point.y() <= row_size_)
     {
         QCharRef bit = edit_str_[point.y() * col_size_ + point.x()];
-        if (ui->addButton->isChecked())
+        if (edit_state_ == kEDIT_ADD)
         {
             if (bit == '0')
             {
                 bit = '1';
             }
         }
-        else if (ui->removeButton->isChecked())
+        else if (edit_state_ == kEDIT_REM)
         {
             if (bit == '1')
             {
                 bit = '0';
             }
         }
-//        if (bit == '1')
-//        {
-//            bit = '0';
-//        }
-//        else if (bit == '0')
-//        {
-//            bit = '1';
-//        }
-//        else if (bit >= '2')
-//        {
-//            QChar cbit = bit.toAscii() - 2;
-//            bit = QChar(cbit);
-//        }
     }
     update();
 }
+
+
+
+/////////////////////////////////////////////////////////////
+/// \brief EditDialog::EditDialog
+/// \param bitmap the bitmap representation of the image
+/// \param parent = 0
+/////////////////////////////////////////////////////////////
+
+EditDialog::EditDialog(const QString& bitmap, QWidget *parent) :
+    QDialog(parent),
+    ui(new Ui::EditDialog)
+{
+    ui->setupUi(this);
+
+    ui->scrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
+    ui->scrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    ui->scrollArea->setWidgetResizable(false);
+
+    ui->widget->setString(bitmap);
+
+    width_ = ui->scrollArea->width();
+    height_ = ui->scrollArea->height();
+
+    this->resize(this->size().width(), height_ + 2 * g_top_margin);
+}
+
+EditDialog::~EditDialog()
+{
+
+}
+
+void EditDialog::adjustSize()
+{
+    if (ui->widget->height() < height_)
+    {
+        ui->scrollArea->resize(width_, ui->widget->height());
+        this->resize(this->size().width(), ui->scrollArea->height() + 2 * g_top_margin);
+    }
+    else
+    {
+        ui->scrollArea->resize(width_, height_);
+        this->resize(this->width(), height_ + 2 * g_top_margin);
+    }
+
+}
+
+void EditDialog::showBitmap()
+{
+    ui->widget->showBitmap();
+    adjustSize();
+}
+
+QString EditDialog::outputString() const
+{
+    return ui->widget->outputString();
+}
+
+void EditDialog::markEditAdd()
+{
+    ui->widget->setEditType(ShowWidget::kEDIT_ADD);
+}
+
+void EditDialog::markEditRemove()
+{
+    ui->widget->setEditType(ShowWidget::kEDIT_REM);
+}
+
+

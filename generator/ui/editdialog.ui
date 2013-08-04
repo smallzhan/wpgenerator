@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>760</width>
+    <width>790</width>
     <height>660</height>
    </rect>
   </property>
@@ -16,7 +16,7 @@
   <widget class="QDialogButtonBox" name="buttonBox">
    <property name="geometry">
     <rect>
-     <x>670</x>
+     <x>690</x>
      <y>280</y>
      <width>81</width>
      <height>141</height>
@@ -29,20 +29,10 @@
     <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
    </property>
   </widget>
-  <widget class="QWidget" name="widget" native="true">
-   <property name="geometry">
-    <rect>
-     <x>10</x>
-     <y>10</y>
-     <width>640</width>
-     <height>640</height>
-    </rect>
-   </property>
-  </widget>
   <widget class="QRadioButton" name="addButton">
    <property name="geometry">
     <rect>
-     <x>670</x>
+     <x>690</x>
      <y>110</y>
      <width>89</width>
      <height>16</height>
@@ -58,7 +48,7 @@
   <widget class="QRadioButton" name="removeButton">
    <property name="geometry">
     <rect>
-     <x>670</x>
+     <x>690</x>
      <y>140</y>
      <width>89</width>
      <height>16</height>
@@ -68,7 +58,44 @@
     <string>Remove</string>
    </property>
   </widget>
+  <widget class="QScrollArea" name="scrollArea">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>10</y>
+     <width>661</width>
+     <height>601</height>
+    </rect>
+   </property>
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
+   <property name="widgetResizable">
+    <bool>true</bool>
+   </property>
+   <widget class="ShowWidget" name="widget">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>659</width>
+      <height>599</height>
+     </rect>
+    </property>
+   </widget>
+  </widget>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>ShowWidget</class>
+   <extends>QWidget</extends>
+   <header location="global">editdialog.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections>
   <connection>
@@ -103,5 +130,41 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>addButton</sender>
+   <signal>pressed()</signal>
+   <receiver>EditDialog</receiver>
+   <slot>markEditAdd()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>700</x>
+     <y>113</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>727</x>
+     <y>37</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>removeButton</sender>
+   <signal>pressed()</signal>
+   <receiver>EditDialog</receiver>
+   <slot>markEditRemove()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>719</x>
+     <y>148</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>727</x>
+     <y>187</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
+ <slots>
+  <slot>markEditAdd()</slot>
+  <slot>markEditRemove()</slot>
+ </slots>
 </ui>

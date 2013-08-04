@@ -12,6 +12,8 @@
 #include <opencv2/highgui/highgui.hpp>
 #include <cmath>
 
+#include <fstream>
+
 static QImage Mat2QImage(cv::Mat const& src)
 {
      cv::Mat temp; // make the same cv::Mat
@@ -234,6 +236,46 @@ void MainWindow::on_actionSave_triggered()
         }
         encoder.setBitmap(sstr.str());
         encoder.encodeBits();
+    }
+}
+
+void MainWindow::on_actionSaveRaw_triggered()
+{
+    // FIXME: 16
+    const int line_num = 16;
+    QFileDialog::Options options;
+    QString selectedFilter;
+    QString fileName = QFileDialog::getSaveFileName(this,
+                                tr("Save WaterPrinter Files"),
+                                "out.3draw",
+                                tr("3D WaterPrinter Files (*.3draw)"),
+                                &selectedFilter,
+                                options);
+    if (!fileName.isEmpty())
+    {
+        std::ofstream sstr(fileName.toStdString().c_str());
+        std::string out_str;
+        if (!ui->reverseBox->isChecked())
+        {
+            out_str = out_bitmap_.toStdString();
+        }
+        else
+        {
+            out_str = reverse_bitmap_.toStdString();
+        }
+        for (size_t i = 0; i < out_str.size(); ++i)
+        {
+            if (i % WaterPrinter::g_col >= line_num)
+            {
+                if (i < out_str.size() - WaterPrinter::g_col) sstr << "\n";
+                i += WaterPrinter::g_col - line_num - 1;
+                continue;
+            }
+            if (i % line_num == 0) sstr << "0B";
+            sstr << (char)out_str[i];
+            if (i % line_num == 7) sstr << ",0B";
+           // else if (i % 16 == 15 && i < out_str.size() - 64) sstr << "\n";
+        }
     }
 }
 

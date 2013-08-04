@@ -36,6 +36,7 @@ public slots:
     void on_actionSave_triggered();
     void on_actionEditMatrix_triggered();
     void on_actionLoad_triggered();
+    void on_actionSaveRaw_triggered();
 
     void showPreview(bool preview);
 
