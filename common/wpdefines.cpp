@@ -1,4 +1,3 @@
-//#include "wpdefines.h"
 
 namespace WaterPrinter
 {

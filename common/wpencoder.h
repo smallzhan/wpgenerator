@@ -22,7 +22,7 @@ using CryptoPP::AutoSeededRandomPool;
 namespace WaterPrinter
 {
 
-#define DATA_LEN 1024
+    static const int DATA_LEN = 1024 * 64;
 
 	class WPEncoder
 	{
