@@ -7,6 +7,7 @@ ImageArea::ImageArea(QWidget *parent)
     : QWidget(parent),
       antialiased_(true),
       size_(100),
+      stretch_(100),
       type_(IMAGE_NONE)
 {
     setBackgroundRole(QPalette::Base);
@@ -14,6 +15,7 @@ ImageArea::ImageArea(QWidget *parent)
 
     this->font_.setWeight(QFont::Black);
     this->font_.setPixelSize(size_);
+    this->font_.setStretch(stretch_);
 }
 
 
@@ -40,6 +42,7 @@ void ImageArea::setFont(const QFont &font)
     this->font_ = font;
     this->font_.setPixelSize(size_);
     this->font_.setLetterSpacing(QFont::PercentageSpacing, space_size_);
+    this->font_.setStretch(stretch_);
     textUpdate();
 
 }
@@ -73,6 +76,13 @@ void ImageArea::setFontSize(const int sz)
     }
 }
 
+void ImageArea::setStretch(const int stretch)
+{
+    this->stretch_ = stretch;
+    this->font_.setStretch(stretch);
+    textUpdate();
+}
+
 void ImageArea::setSpaceSize(const int sz)
 {
     this->space_size_ = sz;
@@ -89,7 +99,9 @@ void ImageArea::textUpdate()
     {
         type_ = DRAW_TEXT;
         update();
-        pxmap_ = QPixmap::grabWidget(this, QRect(1, 1, width()-2, height()-2));
+        pxmap_ = this->grab(QRect(1, 1, width()-2, height()-2));
+        //for Qt4:
+        //pxmap_ = QPixmap::grabWidget(this, QRect(1, 1, width() - 2, height() - 2));
         //pxmap_.save("pxmap.png");
     }
 }

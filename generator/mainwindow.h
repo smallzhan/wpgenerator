@@ -24,6 +24,7 @@ public slots:
     void getFontSize(int sz);
     void getSpaceSize(int sz);
     void getThres(int thres);
+    void getStretch(int stretch);
 
     void textChanged();
     void fontChanged();

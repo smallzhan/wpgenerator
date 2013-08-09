@@ -67,7 +67,11 @@ void MainWindow::fontChanged()
     int spacing = ui->fontspaceSlider->value();
     font.setLetterSpacing(QFont::PercentageSpacing, spacing + 100);
     ui->spaceSpinBox->setValue((double)(spacing + 100) / 100.0);
+
+    int stretch = ui->scaleSlider->value();
+    font.setStretch(stretch);
     ui->widget->setFont(font);
+
     updateAll();
     //update_ = true;
     //updateStatus(true);
@@ -139,6 +143,12 @@ void MainWindow::getSpaceSize(int sz)
 {
     ui->spaceSpinBox->setValue(double(sz + 100.0)/ 100.0);
     ui->widget->setSpaceSize(sz + 100);
+    updateAll();
+}
+
+void MainWindow::getStretch(int sz)
+{
+    ui->widget->setStretch(sz);
     updateAll();
 }
 

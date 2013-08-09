@@ -39,6 +39,7 @@ public slots:
     void setText(const QString &text_);
     void setFontSize(const int sz);
     void setSpaceSize(const int sz);
+    void setStretch(const int stretch);
     void setPen(const QPen &pen_);
     void setBrush(const QBrush &brush_);
     void setAntialiased(bool antialiased_);
@@ -67,6 +68,7 @@ private:
 
     int size_;
     int space_size_;
+    int stretch_;
 
     QPoint beg_;
     QPoint end_;

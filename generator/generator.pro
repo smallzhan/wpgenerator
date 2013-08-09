@@ -43,6 +43,6 @@ LIBS += -lcryptlib_md
 
 INCLUDEPATH += ../common
 
-LIBS += -lopencv_core245 -lopencv_highgui245 -lopencv_imgproc245
+LIBS += -lopencv_core246 -lopencv_highgui246 -lopencv_imgproc246
 #LIBS += -lcryptlib_md
 

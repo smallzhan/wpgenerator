@@ -41,7 +41,7 @@ void ShowArea::timerDone()
     {
         waterdrop_ = 0;
         emit mapOver();
-        printf("timerDone, mapOver...\n");
+        //printf("timerDone, mapOver...\n");
         //return;
         if (p_timer_->isActive())
         {
