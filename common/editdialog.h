@@ -29,7 +29,8 @@ public:
     enum EditState
     {
         kEDIT_ADD,
-        kEDIT_REM
+        kEDIT_REM,
+        kEDIT_LINE
     };
 
     void setEditType(EditState state)
@@ -37,12 +38,17 @@ public:
         edit_state_ = state;
     }
 
+public slots:
+    void lineAddEdit();
+    void lineDelEdit();
+
 protected:
     void paintEvent(QPaintEvent *);
     void mousePressEvent(QMouseEvent *event);
     void mouseMoveEvent(QMouseEvent *event);
     void mouseReleaseEvent(QMouseEvent *event);
 
+    void drawPoint(const QPoint& point);
 
     EditState edit_state_;
 
@@ -58,6 +64,7 @@ private:
     QPoint map2global(const QPoint& mpos) const;
     QPoint global2map(const QPoint& gpos) const;
     QPoint global2map(int i, int j) const;
+
 };
 
 
@@ -78,6 +85,9 @@ public:
 public slots:
     void markEditAdd();
     void markEditRemove();
+    void markEditLine();
+
+
 
 private:
     Ui::EditDialog *ui;

@@ -34,15 +34,14 @@ FORMS    += ui/mainwindow.ui \
     ui/editdialog.ui
 
 win32 {
-INCLUDEPATH += C:\package\opencv\build\include
-INCLUDEPATH += C:\package\crypto++\include
-LIBS += -LC:\package\opencv\build\x86\vc10\lib
-LIBS += -LC:\package\crypto++\lib\Release
-LIBS += -lcryptlib_md
+INCLUDEPATH += E:\package\opencv\build\include
+# INCLUDEPATH += C:\package\crypto++\include
+LIBS += -LE:\package\opencv\build\x86\vc10\lib
+# LIBS += -LC:\package\crypto++\lib\Release
+# LIBS += -lcryptlib_md
 }
 
 INCLUDEPATH += ../common
 
 LIBS += -lopencv_core246 -lopencv_highgui246 -lopencv_imgproc246
-#LIBS += -lcryptlib_md
 

@@ -30,9 +30,9 @@ INCLUDEPATH += ../common
 
 win32 {
 #INCLUDEPATH += C:\package\opencv\build\include
-INCLUDEPATH += C:\package\crypto++\include
+#INCLUDEPATH += C:\package\crypto++\include
 #LIBS += -LC:\package\opencv\build\x86\vc10\lib
-LIBS += -LC:\package\crypto++\lib\Release
-LIBS += -lcryptlib_md
+#LIBS += -LC:\package\crypto++\lib\Release
+#LIBS += -lcryptlib_md
 }
 

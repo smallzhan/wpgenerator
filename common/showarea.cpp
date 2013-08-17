@@ -68,6 +68,7 @@ void ShowArea::timerDone()
                 {
                     continue;
                 }
+                //else if (str[i * WaterPrinter::g_col / 8 + j / 8] & (1 << (7 - j % 8 )))
                 else if (str[i * WaterPrinter::g_col + j] == '1')
                 {
                     QPoint p ((j + 0.5) * h_step,

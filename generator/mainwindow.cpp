@@ -325,6 +325,12 @@ void MainWindow::on_actionLoad_triggered()
                     sstr << '0';
             }
         }
+//        const char* pbit = bitmap.data();
+
+//        for (int i = bitmap.size() - 8; i >= 0; i -= 8)
+//        {
+//            sstr << std::string(pbit + i, 8);
+//        }
 
         out_bitmap_ = QString::fromStdString(sstr.str());
         updatePreview();
@@ -474,8 +480,15 @@ void MainWindow::transformImage()
     for (size_t j = 0; j < full_matrix.rows; ++j)
     {
         uchar * pRow = full_matrix.ptr<uchar>(j);
+        //uchar bit = 0;
         for (size_t i = 0; i < full_matrix.cols; ++i)
         {
+//            if (i % 8 == 7)
+//            {
+//                sstr << (char) bit;
+//                bit = 0;
+//            }
+//            bit |= pRow[i] << (7 - i % 8);
             if (pRow[i] == 0)
                 sstr << '1';
             else
@@ -529,6 +542,7 @@ void MainWindow::reverseBitmap(const QString& in, QString& out)
     out = in;
     for (int i = 0; i < in.size(); ++i)
     {
+        //out[i] = ~in[i];
         QCharRef bit = out[i];
         if (in[i] == '1')
             bit = '0';

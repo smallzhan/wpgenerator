@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>790</width>
-    <height>660</height>
+    <width>801</width>
+    <height>671</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,14 +16,14 @@
   <widget class="QDialogButtonBox" name="buttonBox">
    <property name="geometry">
     <rect>
-     <x>690</x>
-     <y>280</y>
-     <width>81</width>
-     <height>141</height>
+     <x>9</x>
+     <y>620</y>
+     <width>661</width>
+     <height>40</height>
     </rect>
    </property>
    <property name="orientation">
-    <enum>Qt::Vertical</enum>
+    <enum>Qt::Horizontal</enum>
    </property>
    <property name="standardButtons">
     <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
@@ -33,13 +33,13 @@
    <property name="geometry">
     <rect>
      <x>690</x>
-     <y>110</y>
+     <y>30</y>
      <width>89</width>
      <height>16</height>
     </rect>
    </property>
    <property name="text">
-    <string>Add</string>
+    <string>涂黑点</string>
    </property>
    <property name="checked">
     <bool>true</bool>
@@ -49,13 +49,13 @@
    <property name="geometry">
     <rect>
      <x>690</x>
-     <y>140</y>
+     <y>60</y>
      <width>89</width>
      <height>16</height>
     </rect>
    </property>
    <property name="text">
-    <string>Remove</string>
+    <string>去黑点</string>
    </property>
   </widget>
   <widget class="QScrollArea" name="scrollArea">
@@ -86,6 +86,45 @@
      </rect>
     </property>
    </widget>
+  </widget>
+  <widget class="QRadioButton" name="radioButton">
+   <property name="geometry">
+    <rect>
+     <x>690</x>
+     <y>90</y>
+     <width>89</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>行编辑模式</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="lineAdd">
+   <property name="geometry">
+    <rect>
+     <x>690</x>
+     <y>140</y>
+     <width>75</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>行增加</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="lineRemove">
+   <property name="geometry">
+    <rect>
+     <x>690</x>
+     <y>180</y>
+     <width>75</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>行删除</string>
+   </property>
   </widget>
  </widget>
  <customwidgets>
@@ -138,7 +177,7 @@
    <hints>
     <hint type="sourcelabel">
      <x>700</x>
-     <y>113</y>
+     <y>33</y>
     </hint>
     <hint type="destinationlabel">
      <x>727</x>
@@ -154,7 +193,7 @@
    <hints>
     <hint type="sourcelabel">
      <x>719</x>
-     <y>148</y>
+     <y>68</y>
     </hint>
     <hint type="destinationlabel">
      <x>727</x>
@@ -162,9 +201,29 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>radioButton</sender>
+   <signal>pressed()</signal>
+   <receiver>EditDialog</receiver>
+   <slot>markEditLine()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>756</x>
+     <y>103</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>774</x>
+     <y>128</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>markEditAdd()</slot>
   <slot>markEditRemove()</slot>
+  <slot>markEditLine()</slot>
+  <slot>lineAddEdit()</slot>
+  <slot>lineRemEdit()</slot>
+  <slot>lineDelEdit()</slot>
  </slots>
 </ui>
