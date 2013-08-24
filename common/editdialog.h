@@ -19,8 +19,10 @@ public:
 
     void setString(const QString& bitmap);
 
-    QString outputString() const
+    QString outputString()
     {
+        edit_str_.replace(QString("3"), QString("1"));
+        edit_str_.replace(QString("2"), QString("0"));
         return edit_str_;
     }
 

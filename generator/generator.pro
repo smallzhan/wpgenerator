@@ -39,9 +39,16 @@ INCLUDEPATH += C:\package\crypto++\include
 #LIBS += -LE:\package\opencv\build\x86\vc10\lib
 LIBS += -LC:\package\crypto++\lib\Release
 # LIBS += -lcryptlib_md
+LIBS += -lopencv_core246 -lopencv_highgui246 -lopencv_imgproc246
+}
+
+unix {
+INCLUDEPATH += /opt/ros/fuerte/include
+LIBS += -L/opt/ros/fuerte/lib
+LIBS += -lopencv_core -lopencv_highgui -lopencv_imgproc
 }
 
 INCLUDEPATH += ../common
 
-LIBS += -lopencv_core246 -lopencv_highgui246 -lopencv_imgproc246
+
 
