@@ -186,12 +186,14 @@ void MainWindow::on_actionOpen_triggered()
     QString selectedFilter;
     QString fileName = QFileDialog::getOpenFileName(this,
                                 tr("Open Image Files"),
-                                "",
+                                work_dir_,
                                 tr("Image files (*.jpg *.jpeg *.png *.gif *.bmp)"),
                                 &selectedFilter,
                                 options);
     if (!fileName.isEmpty())
     {
+        QDir curr_dir(fileName);
+        work_dir_ = curr_dir.filePath(fileName);
         fname_ = fileName;
         ui->widget->setShowType(ImageArea::LOAD_IMAGE);
         ui->widget->setImage(fileName);
@@ -295,12 +297,14 @@ void MainWindow::on_actionLoad_triggered()
     QString selectedFilter;
     QString fileName = QFileDialog::getOpenFileName(this,
                                 tr("Open WaterPrinter Files"),
-                                "",
+                                work_dir_,
                                 tr("3D WaterPrinter Files (*.3dwp)"),
                                 &selectedFilter,
                                 options);
     if (!fileName.isEmpty())
     {
+        QDir curr_dir(fileName);
+        work_dir_ = curr_dir.filePath(fileName);
         clearImage();
         bool encrypt = ui->encryptBox->isChecked();
 

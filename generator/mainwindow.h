@@ -57,7 +57,9 @@ private:
     QString fontfamily_;
     QString text_;
     QString fname_;
+    QString work_dir_;
     int size_;
+
 
     //bool update_;
 
