@@ -42,5 +42,5 @@ INCLUDEPATH += C:\package\opencv\build\include
 LIBS += -LC:\package\opencv\build\x86\vc10\lib
 #LIBS += -LC:\package\crypto++\lib\Release
 # LIBS += -lcryptlib_md
-LIBS += -lopencv_core246 -lopencv_highgui246 -lopencv_imgproc246
+LIBS += -lopencv_core246 -lopencv_highgui246 -lopencv_imgproc246 -lws2_32
 }

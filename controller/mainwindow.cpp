@@ -167,8 +167,8 @@ void MainWindow::setSendFile()
             //ui->statusBar->showMessage("Current dir:" + curr_dir.dirName() );
             work_dir_ = curr_dir.filePath(fileName);
 
-            int ret = QMessageBox::question(NULL, "Confirm",
-                                            QApplication::translate("MainWindow", "确定发送该文件？", 0, QApplication::UnicodeUTF8),
+            int ret = QMessageBox::question(NULL, QString("Confirm"), QString("Are you sure to send the file ") + curr_dir.dirName(),
+                                            //QApplication::translate("MainWindow", "确定发送该文件？", 0, QApplication::UnicodeUTF8),
                                             QMessageBox::Yes | QMessageBox::No, QMessageBox::Yes);
             if (ret == QMessageBox::Yes)
             {
@@ -300,7 +300,7 @@ void MainWindow::sendFile(const QString &fname)
         in.read(buffer, length);
 
         std::stringstream sstr;
-        sstr << "$F" << length << "@" << curr_dir.dirName().toStdString()
+        sstr << "$F" << length + curr_dir.dirName().size() + 1 << "@" << curr_dir.dirName().toStdString()
              << ":" << std::string(buffer, length);
 
         std::string send_msg = sstr.str();
@@ -461,7 +461,7 @@ void MainWindow::transformImage(const QString &image, const QString &wpfile)
     std::string out_str = sstr.str();
 
     WaterPrinter::WPEncoder encoder;
-    encoder.setCryptType(encrypt);
+    //encoder.setCryptType(encrypt);
     encoder.setOutfile(wpfile.toStdString());
 
         sstr.str("");

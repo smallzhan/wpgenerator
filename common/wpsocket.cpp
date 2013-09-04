@@ -50,14 +50,12 @@ static void fillAddress(const std::string &addr,
 
 Socket::Socket(int type, int protocol)
 {
-#ifdef WIN32
+#ifdef _WIN32
     if (!s_initialized)
     {
-        WORD version_req;
-        WSDATA wsa_data;
+        WSADATA wsa_data;
 
-        version_req = MAKEWORD(2, 0);
-        if (WSAStartup(version_req, &wsa_data) = 0)
+        if (WSAStartup(MAKEWORD(2, 0), &wsa_data) == 0)
         {
             s_initialized = true;
         }
@@ -81,7 +79,7 @@ Socket::Socket(int socket)
 
 Socket::~Socket()
 {
-#ifdef WIN32
+#ifdef _WIN32
     ::closesocket(socket_);
 #else
     ::close(socket_);
@@ -139,7 +137,7 @@ void Socket::setLocalAddressAndPort(const std::string &local_addr,
 
 void Socket::cleanUp()
 {
-#ifdef WIN32
+#ifdef _WIN32
     if (WSACleanup() != 0)
     {
         printf("WSACLeanup failed on windows\n");
@@ -299,7 +297,7 @@ TCPSocket::TCPSocket(int new_conn) : WPSocket(new_conn)
 TCPServerSocket::TCPServerSocket(unsigned short local_port, int queue_len)
     : Socket(SOCK_STREAM, IPPROTO_TCP)
 {
-    int yes = 1;
+    char yes = 1;
     setsockopt(socket_, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(int));
     setLocalPort(local_port);
 
@@ -311,7 +309,7 @@ TCPServerSocket::TCPServerSocket(const std::string& local_addr,
                                  int queue_len)
     : Socket(SOCK_STREAM, IPPROTO_TCP)
 {
-    int yes = 1;
+    char yes = 1;
     setsockopt(socket_, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(int));
     setLocalAddressAndPort(local_addr, local_port);
 
