@@ -99,9 +99,9 @@ void ImageArea::textUpdate()
     {
         type_ = DRAW_TEXT;
         update();
-        pxmap_ = this->grab(QRect(1, 1, width()-2, height()-2));
+        //pxmap_ = this->grab(QRect(1, 1, width()-2, height()-2));
         //for Qt4:
-        //pxmap_ = QPixmap::grabWidget(this, QRect(1, 1, width() - 2, height() - 2));
+        pxmap_ = QPixmap::grabWidget(this, QRect(1, 1, width() - 2, height() - 2));
         //pxmap_.save("pxmap.png");
     }
 }

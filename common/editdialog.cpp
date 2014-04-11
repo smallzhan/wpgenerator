@@ -175,7 +175,6 @@ void ShowWidget::mouseMoveEvent(QMouseEvent *event)
 
 void ShowWidget::mouseReleaseEvent(QMouseEvent *event)
 {
-
     if (event->pos() != select_point_)
     {
         return;
@@ -192,7 +191,47 @@ void ShowWidget::mouseReleaseEvent(QMouseEvent *event)
 
 void ShowWidget::lineAddEdit()
 {
+    int beg = -1;
+    int end = -1;
+    bool inside = false;
 
+    for (size_t i = 0; i< edit_str_.size(); ++i)
+    {
+        if (edit_str_[i] >= '2')
+        {
+            if (!inside)
+            {
+                beg = i;
+                inside = true;
+            }
+        }
+        else if (edit_str_[i] <= '1')
+        {
+            if (inside)
+            {
+                end = i;
+                inside = false;
+            }
+        }
+    }
+
+    if (inside)
+    {
+        end = edit_str_.size();
+    }
+
+    if (beg != -1)
+    {
+        QString zeros;
+        zeros.resize(col_size_);
+        for (size_t i = 0; i < col_size_; ++i)
+        {
+            zeros[i] = QChar('2');
+        }
+        edit_str_.insert(end, zeros);
+        row_size_ += 1;
+    }
+    showBitmap();
 }
 
 void ShowWidget::lineDelEdit()

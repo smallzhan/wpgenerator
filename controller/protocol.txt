@@ -1,0 +1,5 @@
+#--- header (now #--instruction, $--parameters)
+ +-C -- type (C--command, F--file, L--list ...)
+   +- size
+     +- @
+       +- contents

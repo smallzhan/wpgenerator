@@ -2,6 +2,7 @@ TEMPLATE = subdirs
 
 SUBDIRS = \
 	generator \
-        simulator
+        simulator \
+        controller
 
 sources.files = *.pro
