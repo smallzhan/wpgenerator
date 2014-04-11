@@ -247,7 +247,7 @@ EditDialog::EditDialog(const QString& bitmap, QWidget *parent) :
     ui->setupUi(this);
 
     ui->scrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
-    ui->scrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    ui->scrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
     ui->scrollArea->setWidgetResizable(false);
 
     ui->widget->setString(bitmap);
