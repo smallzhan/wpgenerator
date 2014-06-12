@@ -37,9 +37,9 @@ LIBS += -lopencv_core -lopencv_highgui -lopencv_imgproc
 }
 
 win32 {
-INCLUDEPATH += C:\package\opencv\build\include
+INCLUDEPATH += E:\package\opencv\build\include
 #INCLUDEPATH += C:\package\crypto++\include
-LIBS += -LC:\package\opencv\build\x86\vc10\lib
+LIBS += -LE:\package\opencv\build\x86\vc10\lib
 #LIBS += -LC:\package\crypto++\lib\Release
 # LIBS += -lcryptlib_md
 LIBS += -lopencv_core246 -lopencv_highgui246 -lopencv_imgproc246 -lws2_32

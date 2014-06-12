@@ -95,7 +95,7 @@ void MainWindow::updateStatus()
         ui->statusBar->showMessage("Load Image: " + fname_ );
         break;
     case ImageArea::SHOW_IMAGE:
-        ui->statusBar->showMessage("Show Image: " + fname_);
+        ui->statusBar->showMessage("Show Image: " + fname_ + "with prop" + QString::number(ui->spinBox->value()));
         break;
     case ImageArea::DRAW_TEXT:
     case ImageArea::SHOW_TEXT:
@@ -370,10 +370,12 @@ void MainWindow::transformImage()
     cv::Mat gray_img(orig_img.size(), CV_8U);
 
     int col = WaterPrinter::g_col;
-    int row = WaterPrinter::g_row;
-    if (!ui->fixedBox->isChecked())
+    int row = (int) (col * 1.0/ orig_img.cols * orig_img.rows);
+    if (ui->fixedBox->isChecked())
     {
-        row = (int) (col * 1.0/ orig_img.cols * orig_img.rows);
+        int prop = ui->spinBox->value();
+        if (prop > 0 ) row = (int) (row / prop);
+        if (row < WaterPrinter::g_row / 4) row = WaterPrinter::g_row / 4;
     }
 
     full_matrix.create(row, col, CV_8U);
@@ -389,8 +391,9 @@ void MainWindow::transformImage()
     int segment = 4;
     int dot_row = 0;
 
-    if (ui->fixedBox->isChecked())
+    if (!ui->fixedBox->isChecked())
     {
+        row = WaterPrinter::g_row;
         int step = gray_img.rows / segment;
         for (int i = 0; i < segment; ++i)
         {

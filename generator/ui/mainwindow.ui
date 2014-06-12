@@ -246,7 +246,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>固定大小</string>
+     <string>压缩比例</string>
     </property>
     <property name="checked">
      <bool>true</bool>
@@ -293,6 +293,22 @@
      <bool>false</bool>
     </property>
    </widget>
+   <widget class="QSpinBox" name="spinBox">
+    <property name="geometry">
+     <rect>
+      <x>460</x>
+      <y>100</y>
+      <width>42</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="minimum">
+     <number>1</number>
+    </property>
+    <property name="maximum">
+     <number>99</number>
+    </property>
+   </widget>
    <zorder>layoutWidget</zorder>
    <zorder>widget</zorder>
    <zorder>showWidget</zorder>
@@ -310,6 +326,7 @@
    <zorder>fixedBox</zorder>
    <zorder>reverseBox</zorder>
    <zorder>scaleSlider</zorder>
+   <zorder>spinBox</zorder>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
@@ -615,6 +632,22 @@
     <hint type="destinationlabel">
      <x>367</x>
      <y>180</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>spinBox</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>updateAll()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>494</x>
+     <y>152</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>481</x>
+     <y>110</y>
     </hint>
    </hints>
   </connection>
