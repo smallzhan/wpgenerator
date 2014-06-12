@@ -277,16 +277,25 @@ void MainWindow::on_actionSaveRaw_triggered()
         }
         for (size_t i = 0; i < out_str.size(); ++i)
         {
-            if (i % WaterPrinter::g_col >= line_num)
-            {
-                if (i < out_str.size() - WaterPrinter::g_col) sstr << "\n";
-                i += WaterPrinter::g_col - line_num - 1;
-                continue;
-            }
-            if (i % line_num == 0) sstr << "0B";
+//            if (i % WaterPrinter::g_col >= line_num)
+//            {
+//                if (i < out_str.size() - WaterPrinter::g_col) sstr << "\n";
+//                i += WaterPrinter::g_col - line_num - 1;
+//                continue;
+//            }
+//            if (i % line_num == 0) sstr << "0B";
+//            sstr << (char)out_str[i];
+//            if (i % line_num == 7) sstr << ",0B";
+//           // else if (i % 16 == 15 && i < out_str.size() - 64) sstr << "\n";
             sstr << (char)out_str[i];
-            if (i % line_num == 7) sstr << ",0B";
-           // else if (i % 16 == 15 && i < out_str.size() - 64) sstr << "\n";
+            if (i % WaterPrinter::g_col == WaterPrinter::g_col - 1)
+            {
+                sstr << "\n";
+            }
+            else if (i % line_num == line_num - 1)
+            {
+                sstr << ",";
+            }
         }
     }
 }
