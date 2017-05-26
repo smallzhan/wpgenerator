@@ -13,5 +13,7 @@ namespace WaterPrinter
     extern int g_row;
     extern int g_dot_size;
 
+    extern bool show_static;
+
 }
 #endif

@@ -3,6 +3,10 @@
 # Project created by QtCreator 2013-06-05T17:33:52
 #
 #-------------------------------------------------
+# QT_CONFIG -= no-pkg-config
+# CONFIG += link_pkgconfig
+# PKGCONFIG += opencv
+
 
 QT       += core gui
 
@@ -42,7 +46,12 @@ LIBS += -lcryptlib_md
 }
 
 INCLUDEPATH += ../common
+INCLUDEPATH += /usr/local/Cellar/opencv/2.4.13.2/include/opencv
+INCLUDEPATH += /usr/local/Cellar/opencv/2.4.13.2/include
 
-LIBS += -lopencv_core245 -lopencv_highgui245 -lopencv_imgproc245
+LIBS += -L/usr/local/Cellar/opencv/2.4.13.2/lib -lopencv_core -lopencv_highgui -lopencv_imgproc
 #LIBS += -lcryptlib_md
+
+
+
 

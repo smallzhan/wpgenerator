@@ -85,6 +85,9 @@
       <height>161</height>
      </rect>
     </property>
+    <property name="toolTipDuration">
+     <number>1</number>
+    </property>
     <property name="maximum">
      <number>200</number>
     </property>
@@ -265,6 +268,19 @@
      <string>输出反转</string>
     </property>
    </widget>
+   <widget class="QCheckBox" name="gravityBox">
+    <property name="geometry">
+     <rect>
+      <x>390</x>
+      <y>140</y>
+      <width>87</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>重力补偿</string>
+    </property>
+   </widget>
    <zorder>layoutWidget</zorder>
    <zorder>widget</zorder>
    <zorder>showWidget</zorder>
@@ -281,6 +297,7 @@
    <zorder>encryptBox</zorder>
    <zorder>fixedBox</zorder>
    <zorder>reverseBox</zorder>
+   <zorder>gravityBox</zorder>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
@@ -288,7 +305,7 @@
      <x>0</x>
      <y>0</y>
      <width>562</width>
-     <height>23</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu_File">
@@ -570,6 +587,22 @@
     <hint type="destinationlabel">
      <x>153</x>
      <y>300</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>gravityBox</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>updateAll()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>433</x>
+     <y>184</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>280</x>
+     <y>363</y>
     </hint>
    </hints>
   </connection>

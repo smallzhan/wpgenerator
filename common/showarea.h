@@ -40,6 +40,8 @@ private:
     int col_;
     int row_;
 
+    bool show_static_;
+
     QTimer *p_timer_;
 
     QString show_strs_;

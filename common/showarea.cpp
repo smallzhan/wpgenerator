@@ -14,28 +14,64 @@ ShowArea::ShowArea(QWidget *parent)
     col_ = WaterPrinter::g_col;
     row_ = WaterPrinter::g_row;
 
+    show_static_ = WaterPrinter::show_static;
+
     setBackgroundRole(QPalette::Base);
     setAutoFillBackground(true);
 
-    p_timer_ = new QTimer(this);
+    if (!show_static_)
+    {
+        p_timer_ = new QTimer(this);
 
-    connect(p_timer_, SIGNAL(timeout()), this, SLOT(timerDone()));
+        connect(p_timer_, SIGNAL(timeout()), this, SLOT(timerDone()));
+    }
+    else
+    {
+        timerDone();
+    }
 }
 
 ShowArea::~ShowArea()
 {
-    if (p_timer_->isActive())
+    if (!show_static_)
     {
-        p_timer_->stop();
-    }
+        if (p_timer_->isActive())
+        {
+            p_timer_->stop();
+        }
 
-    delete(p_timer_);
+        delete(p_timer_);
+    }
 }
 
 void ShowArea::timerDone()
 {
 
     row_ = show_strs_.size() / col_;
+
+    if (show_static_)
+    {
+        float h_step = width() * 1.0 / WaterPrinter::g_col;
+        float v_step = height() * 1.0 / WaterPrinter::g_row;
+        std::string str = show_strs_.toStdString();
+        if (str.empty()) return;
+        pointlist_.clear();
+
+        for (int i = 0; i < WaterPrinter::g_row; ++i)
+        {
+            for (int j = 0; j < WaterPrinter::g_col; ++j)
+            {
+                if (str[i * WaterPrinter::g_col + j] == '1')
+                {
+                    QPoint p((j + 0.5) * h_step,
+                             i * v_step);
+                    pointlist_.append(p);
+                }
+            }
+        }
+        update();
+        return;
+    }
 
     if (waterdrop_ > row_ + WaterPrinter::g_row)
     {
@@ -92,26 +128,35 @@ void ShowArea::timerDone()
 
 void ShowArea::setWaterDrop(const QString& bitmap)
 {
-    if (p_timer_->isActive())
-    {
-        p_timer_->stop();
-    }
-
-    waterdrop_ = 0;
-
+    if (bitmap.isEmpty()) return;
     show_strs_ = bitmap;
-
     timerDone();
-    p_timer_->start(20);
+
+    if (!show_static_)
+    {
+        if (p_timer_->isActive())
+        {
+            p_timer_->stop();
+        }
+
+        waterdrop_ = 0;
+
+
+        //timerDone();
+        p_timer_->start(20);
+    }
 }
 
 void ShowArea::stopWaterDrop()
 {
-    if (p_timer_->isActive())
+    if (!show_static_)
     {
-        p_timer_->stop();
+        if (p_timer_->isActive())
+        {
+            p_timer_->stop();
+        }
+        waterdrop_ = 0;
     }
-    waterdrop_ = 0;
 }
 
 void ShowArea::paintEvent(QPaintEvent * /*event*/)

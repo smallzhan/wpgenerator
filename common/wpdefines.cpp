@@ -11,7 +11,9 @@ namespace WaterPrinter
 	char d_str[] = "0x1cb498b0108a350e246de5370fd90c45dda79a76adb86a51933546ec497b5fc42a57160132a7b8b4729f2bf6234543fa4e371e8975ee4c7c5281c129083945f9a3d63cb4d1c2c5e3b7e049d71e7f23672c18ff398ae2ad923ab0d0fa3871f34a682e91257ae20ef8db2f546dafe16b7217602c7ad28501f03aaf0159aca7651h";
 	char e_str[] = "0x11";
 
-    int g_col = 64;
-    int g_row = 32;
-    int g_dot_size = 10;
+    int g_col = 128;
+    int g_row = 96;
+    int g_dot_size = 6;
+
+    bool show_static = true;
 }

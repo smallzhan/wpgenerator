@@ -346,6 +346,7 @@ void MainWindow::transformImage()
     QPixmap pxmap = ui->widget->getImage();
     QImage image = pxmap.toImage().convertToFormat(QImage::Format_RGB888);
     orig_img = QImage2Mat(image);
+    if (orig_img.empty()) return;
 
     cv::Mat gray_img(orig_img.size(), CV_8U);
 
@@ -369,7 +370,7 @@ void MainWindow::transformImage()
     int segment = 4;
     int dot_row = 0;
 
-    if (ui->fixedBox->isChecked())
+    if (ui->gravityBox->isChecked())
     {
         int step = gray_img.rows / segment;
         for (int i = 0; i < segment; ++i)

@@ -85,7 +85,7 @@ void ShowWidget::paintEvent(QPaintEvent *)
             {
                 painter.setBrush(Qt::darkGray);
             }
-            painter.drawEllipse(point, dot_size_ / 2, dot_size_ / 2);
+            painter.drawEllipse(point, dot_size_ / 2, dot_size_ / 2 );
             //edit_str_[i * g_col + j] = '2';
         }
     }
